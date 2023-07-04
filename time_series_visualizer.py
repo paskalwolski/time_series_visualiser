@@ -18,7 +18,7 @@ def draw_line_plot():
     # Draw line plot
 
     fig, ax = plt.subplots()
-    df.plot(ax=ax, title="Daily freeCodeCamp Forum Page Views 5/2016-12/2019", xlabel="Date", ylabel="Page Visits", legend=False, figsize=(12, 4), color="red")
+    df.plot(ax=ax, title="Daily freeCodeCamp Forum Page Views 5/2016-12/2019", xlabel="Date", ylabel="Page Views", legend=False, figsize=(12, 4), color="red")
     # Save image and return fig (don't change this part)
     fig.savefig('line_plot.png')
     return fig
