@@ -25,19 +25,19 @@ def draw_line_plot():
 
 
 def draw_bar_plot():
-    # average daily page views for each month grouped by year.
-    # The legend should show month labels and have a title of Months. 
-    # On the chart, the label on the x axis should be Years and 
-    # the label on the y axis should be Average Page Views.
-   
     fig, ax = plt.subplots()
+
+    month_convert = {1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"}
     # Copy and modify data for monthly bar plot
     df_bar = df.groupby([df.index.year, df.index.month]).mean()
-    print(df_bar.head())
+    df_bar.rename_axis(index=["Year", "Month"], inplace=True)
     df_bar = df_bar.reset_index()
-    df_bar.plot(ax=ax, kind="bar")
-    
+    df_bar = df_bar.pivot(index="Year", columns="Month", values="value")
+    df_bar.rename(columns=month_convert, inplace=True)
+
     # Draw bar plot
+    df_bar.plot(ax=ax, kind="bar", xlabel="Years", ylabel="Average Page Views")
+    plt.tight_layout()
 
     # Save image and return fig (don't change this part)
     fig.savefig('bar_plot.png')
@@ -51,7 +51,24 @@ def draw_box_plot():
     df_box['year'] = [d.year for d in df_box.date]
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
-    # Draw box plots (using Seaborn)
+   # Setting up figure
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(30, 12))
+    fig.set_figwidth(20)
+    fig.set_figheight(6)
+
+    # Plotting Trend
+    sns.boxplot(data=df_box, ax=ax1, x='year', y='value')
+    ax1.set_xlabel('Year')
+    ax1.set_ylabel('Page Views')
+    ax1.set_title("Year-wise Box Plot (Trend)")
+    fig
+
+    # Plotting Seasonality
+    sns.boxplot(data=df_box, ax=ax2, x='month', y='value', order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    # ax2.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'])
+    ax2.set_xlabel('Month')
+    ax2.set_ylabel('Page Views')
+    ax2.set_title("Month-wise Box Plot (Seasonality)")
 
     # Save image and return fig (don't change this part)
     fig.savefig('box_plot.png')
